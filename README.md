@@ -1,3 +1,3 @@
 # JebRichards.github.io
 
-Trying to test git hun pages
+Trying to test github pages
