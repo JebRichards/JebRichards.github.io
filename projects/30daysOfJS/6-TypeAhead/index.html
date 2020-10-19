@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Simpson Quote Finder</h1>
+  <form class="search-form">
+    <input type="text" class="search" placeholder="Character or any word">
+    <ul class="suggestions">
+      
+    </ul>
+  </form>
+  <p>Data obtained from <a target="_blank" href="https://thesimpsonsquoteapi.glitch.me/">The Simpson Quote API</a> by <a target="_blank" href="https://jluboff-portfolio.glitch.me/">Jason Luboff</a> to learn how to give the searchbar a type ahead feature.</p>
+<script>
+
+const characters = [];
+
+fetch('quotes.json')
+  .then(blob => blob.json())
+  .then(data => characters.push(...data))
+
+function findMatches(wordToMatch, characters) {
+  return characters.filter(item => {
+    //Here we need to figure out if anything matches what was searched
+    const regex = new RegExp(wordToMatch, 'gi');
+    return item.quote.match(regex) || item.character.match(regex)
+  })
+}
+
+function displayMatches() {
+  if (this.value == '') {
+    const noHtml = '';
+    return suggestions.innerHTML = noHtml
+  }
+  const matchArray = findMatches(this.value, characters)
+  const html = matchArray.map(result => {
+   
+    const regexy = new RegExp(this.value, 'gi');
+    const quoteName = result.quote.replace(regexy, `<span class="high">${this.value}</span>`);
+    const characterName = result.character.replace(regexy, `<span class="high">${this.value}</span>`);
+    return `
+      <li>
+        <span class="quote">"${quoteName}"</span>
+        <span class="name">${characterName}</span>
+        
+      </li>
+    `;
+    }).join('');
+  suggestions.innerHTML = html;
+}
+
+const searchInput = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions'); 
+
+searchInput.addEventListener('change', displayMatches)
+searchInput.addEventListener('keyup', displayMatches)
+
+</script>
+</body>
+</html>
